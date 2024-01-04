@@ -1,6 +1,50 @@
 <?php
-    session_start();
+session_start();
+
+// Inicializa o número da bomba e as tentativas se não existirem
+if (!isset($_SESSION['bomb_number'])) {
+    $_SESSION['bomb_number'] = rand(1, 10); // Altere o intervalo conforme necessário
+    $_SESSION['attempts'] = 3;
+}
+print_r($_SESSION['bomb_number']);
+print_r($_SESSION['attempts']);
+// Verifica se o formulário foi enviado
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Decrementa o número de tentativas
+    $_SESSION['attempts']--;
+
+    // Obtém o palpite do usuário
+    $user_guess = $_POST['guess'];
+
+    // Verifica se o palpite é correto
+    if ($user_guess == $_SESSION['bomb_number'] && $_SESSION['attempts'] > 0) {
+        header("Location: end.html");
+        exit();
+    } else if ($_SESSION['attempts'] == 0 ){
+      header("location: gameover.html");
+    }
+
+    // Verifica se o usuário ainda tem tentativas
+    if ($_SESSION['attempts'] > 0) {
+        // Redireciona de volta para a página principal com o número de tentativas restantes
+        header("Location: page3.php?attempts=" . $_SESSION['attempts']);
+        exit();
+    } else {
+        // Se o usuário não tiver mais tentativas, redireciona para a página de game over
+        header("Location: gameover.html");
+        exit();
+    }
+}
+
+// Verifica se o número de tentativas está definido
+if (isset($_GET['attempts'] )) {
+    header("Location: index.html");
+    exit();
+}
+
+$remaining_attempts = $_SESSION['attempts'];
 ?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -20,11 +64,11 @@
         <main class="d-flex flex-column align-items-center justify-content-between h-50 p-4">
           <div class="w-75 d-flex flex-column align-items-center">
             <p class="text-white ">Digite um número entre 1 e 10 para  desarmar a bomba.
-               <span class="text-tentativas">Você tem <?= $_GET['number_life'] ?> tentativas.</span>
+               <span class="text-tentativas">Você tem <?=  $remaining_attempts; ?> tentativas.</span>
                 Lembre-se que a população inteira de Utashinai depende de você.</p>
               <!-- Conteúdo adicional, se necessário -->
              <div class="w-50 d-flex justify-content-center align-items-center text-center">
-              <form action="config.php" method="POST"> 
+              <form action="page3.php" method="POST"> 
               <input type="number" class="form-control" name="number_bomb_user" id="exampleFormControlInput1" placeholder="Escolha um número para tentar desarmar a bomba">
              </div>
             

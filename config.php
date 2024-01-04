@@ -1,23 +1,35 @@
 <?php
 session_start();
 
-$number_bomb = (rand(1, 10));
-echo "Número da bomba: $number_bomb<br>";
-$number_life = 3;
-//$number_life = isset($_SESSION['number_life']) ? $_SESSION['number_life'] : 3;
-echo "Número de vidas antes do laço: $number_life<br>";
+// Inicializa o número da bomba e as tentativas se não existirem
+if (!isset($_SESSION['bomb_number'])) {
+    $_SESSION['bomb_number'] = rand(1, 10); // Altere o intervalo conforme necessário
+    $_SESSION['attempts'] = 3;
+}
 
+// Verifica se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $number_bomb_user = $_POST['number_bomb_user'];
-    header('Location: end.html');
-    while ($number_bomb != $number_bomb_user ) {
-        $number_life--;
-        
+    // Decrementa o número de tentativas
+    $_SESSION['attempts']--;
 
-        echo "Você tem " . $number_life . " tentativas restantes.";
-        echo 'Encaminhando para a página page3.php';
-        // Redireciona para page3.php passando o número de vidas
-       header("Location: page3.php?number_life=$number_life");
-    } 
+    // Obtém o palpite do usuário
+    $user_guess = $_POST['guess'];
+
+    // Verifica se o palpite é correto
+    if ($user_guess == $_SESSION['bomb_number']) {
+        header("Location: end.html");
+        exit();
+    }
+
+    // Verifica se o usuário ainda tem tentativas
+    if ($_SESSION['attempts'] > 0) {
+        // Redireciona de volta para a página principal com o número de tentativas restantes
+        header("Location: page3.php?attempts=" . $_SESSION['attempts']);
+        exit();
+    } else {
+        // Se o usuário não tiver mais tentativas, redireciona para a página de game over
+        header("Location: gameover.php");
+        exit();
+    }
 }
 ?>

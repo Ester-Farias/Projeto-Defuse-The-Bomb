@@ -1,3 +1,6 @@
+<?php
+    session_start();
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -15,15 +18,22 @@
             <div class="hero">賽博朋克</div>
         </header>
         <main class="d-flex flex-column align-items-center justify-content-between h-50 p-4">
-          <div class="w-75">
-            <p class="text-white ">Nem a policia e o exercitio foram capaz de render todos a tempo por falta de conhecimento especializado
-                 em desarmar as bombas. Então tivemos que lhe chamar para nos ajudar. Voce tem 3 chances para desarmar a bomba, caso 
-                 contrario ela explodira matanto a cidade de Utashinai.</p>
+          <div class="w-75 d-flex flex-column align-items-center">
+            <p class="text-white ">Digite um número entre 1 e 10 para  desarmar a bomba.
+               <span class="text-tentativas">Você tem <?= $_GET['number_life'] ?> tentativas.</span>
+                Lembre-se que a população inteira de Utashinai depende de você.</p>
               <!-- Conteúdo adicional, se necessário -->
+             <div class="w-50 d-flex justify-content-center align-items-center text-center">
+              <form action="config.php" method="POST"> 
+              <input type="number" class="form-control" name="number_bomb_user" id="exampleFormControlInput1" placeholder="Escolha um número para tentar desarmar a bomba">
+             </div>
+            
           </div>
-          <div class="d-flex">
-            <a href="page1.html" class="btn btn-danger mx-5">Back</a>
-            <a href="page3.php" class="btn btn-danger mx-5">Next</a>
+          <div class="d-flex text-white">
+            <a href="page2.html" class="btn btn-danger mx-5">Back</a>
+            
+              <button type="submit" class="btn btn-danger mx-5">NEXT</button>
+            </form>
           </div>
       </main>
       
