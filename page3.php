@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Verifica se o número de tentativas está definido
 if (isset($_GET['attempts'] )) {
-    header("Location: index.html");
+    header("Location: page3.php");
     exit();
 }
 
